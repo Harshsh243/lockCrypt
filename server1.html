@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server 1</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="/socket.io/socket.io.js"></script> <!-- Include Socket.io -->
+
+    
+</head>
+<body>
+    <div class="background-overlay"></div> <!-- Texture overlay -->
+    <div class="container">
+        <nav> <h1>Server 1</h1> </nav>
+        <textarea id="receivedMessages" placeholder="Received Messages" readonly></textarea>
+        
+        <p class="ss">
+            
+            <div class="dropdown">
+                <select id="encryptionTechnique">
+                    <option value="" disabled selected>Select Encryption Technique</option>
+                    <option value="caesar">Caesar Cipher</option>
+                    <option value="playfair">Playfair Cipher</option>
+                    <option value="hill">Hill Cipher</option>
+                    <option value="verman">Verman Cipher</option>
+                    <option value="modifiedCaesar">Modified Caesar Cipher</option>
+                </select>
+            </div>
+        </p>
+        
+        <p class="gg">
+            <input type="text" id="encryptionKey" placeholder="Enter encryption key">
+        </p>
+
+        <p class="hh">
+            <input type="text" id="messageInput" placeholder="Type your message here">
+        </p>
+        <button id="sendMessageButton">Send Message to Server 2</button>
+    </div>
+
+    <script>
+        const socket = io.connect('http://localhost:3000');
+
+        const sendMessageButton = document.getElementById('sendMessageButton');
+        const messageInput = document.getElementById('messageInput');
+        const encryptionTechnique = document.getElementById('encryptionTechnique');
+        const encryptionKey = document.getElementById('encryptionKey');
+        const receivedMessages = document.getElementById('receivedMessages');
+
+        function encryptMessage(message, technique, key) {
+            switch (technique) {
+                case 'caesar':
+                    return caesarCipher(message, key);
+                default:
+                    return message;
+            }
+        }
+
+        function caesarCipher(message, key) {
+            const shift = parseInt(key);
+            return message
+                .split('')
+                .map(char => String.fromCharCode(char.charCodeAt(0) + shift))
+                .join('');
+        }
+
+        sendMessageButton.onclick = () => {
+            const message = messageInput.value;
+            const technique = encryptionTechnique.value;
+            const key = encryptionKey.value;
+
+            const encryptedMessage = encryptMessage(message, technique, key);
+            socket.emit('message', { message: encryptedMessage, technique, key });
+            messageInput.value = '';
+        };
+
+        socket.on('message', (msg) => {
+            receivedMessages.value += `Message: ${msg.message}\nTechnique: ${msg.technique}\nKey: ${msg.key}\n\n`;
+        });
+    </script>
+</body>
+</html>

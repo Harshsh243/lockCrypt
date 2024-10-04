@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server 2</title>
+    <script src="/socket.io/socket.io.js"></script> <!-- Include Socket.io -->
+</head>
+<body>
+    <h1>Server 2</h1>
+    <textarea id="receivedMessages" rows="10" cols="30" placeholder="Received Messages"></textarea><br>
+
+    <!-- Input for decryption key -->
+    <input type="text" id="decryptionKey" placeholder="Enter decryption key"><br>
+    
+    <button id="decryptMessageButton">Decrypt Message</button>
+
+    <script>
+        const socket = io.connect('http://localhost:4000');
+        
+        const receivedMessages = document.getElementById('receivedMessages');
+        const decryptMessageButton = document.getElementById('decryptMessageButton');
+        
+        let lastReceivedMessage = ''; // Store the last received message object
+
+        // Decryption functions (implement the actual decryption logic)
+        function decryptMessage(message, technique, key) {
+            switch (technique) {
+                case 'caesar':
+                    return caesarCipherDecrypt(message, key);
+                // Add implementations for other ciphers here
+                default:
+                    return message; // Return original message if no valid technique is selected
+            }
+        }
+
+        // Example: Caesar cipher decryption function
+        function caesarCipherDecrypt(message, key) {
+            const shift = parseInt(key);
+            return message
+                .split('')
+                .map(char => String.fromCharCode(char.charCodeAt(0) - shift))
+                .join('');
+        }
+
+        socket.on('message', (msg) => {
+            lastReceivedMessage = msg; // Store the last message received
+            receivedMessages.value += `Encrypted Message: ${msg.message}\nTechnique: ${msg.technique}\nKey: ${msg.key}\n\n`;
+        });
+
+        decryptMessageButton.onclick = () => {
+            const decryptedMessage = decryptMessage(lastReceivedMessage.message, lastReceivedMessage.technique, lastReceivedMessage.key);
+
+            receivedMessages.value += `Decrypted Message: ${decryptedMessage}\n\n`; // Display decrypted message
+        };
+    </script>
+</body>
+</html>
