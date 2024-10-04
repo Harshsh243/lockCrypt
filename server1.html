@@ -4,27 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Server 1</title>
+    <link rel="stylesheet" href="styles.css">
     <script src="/socket.io/socket.io.js"></script> <!-- Include Socket.io -->
+
+    
 </head>
 <body>
-    <h1>Server 1</h1>
-    <textarea id="receivedMessages" rows="10" cols="30" placeholder="Received Messages"></textarea><br>
-    
-    <!-- Dropdown to select encryption technique -->
-    <label for="encryptionTechnique">Select Encryption Technique:</label>
-    <select id="encryptionTechnique">
-        <option value="caesar">Caesar Cipher</option>
-        <option value="playfair">Playfair Cipher</option>
-        <option value="hill">Hill Cipher</option>
-        <option value="verman">Verman Cipher</option>
-        <option value="modifiedCaesar">Modified Caesar Cipher</option>
-    </select><br>
-    
-    <!-- Input for encryption key -->
-    <input type="text" id="encryptionKey" placeholder="Enter encryption key"><br>
+    <div class="background-overlay"></div> <!-- Texture overlay -->
+    <div class="container">
+        <nav> <h1>Server 1</h1> </nav>
+        <textarea id="receivedMessages" placeholder="Received Messages" readonly></textarea>
+        
+        <p class="ss">
+            
+            <div class="dropdown">
+                <select id="encryptionTechnique">
+                    <option value="" disabled selected>Select Encryption Technique</option>
+                    <option value="caesar">Caesar Cipher</option>
+                    <option value="playfair">Playfair Cipher</option>
+                    <option value="hill">Hill Cipher</option>
+                    <option value="verman">Verman Cipher</option>
+                    <option value="modifiedCaesar">Modified Caesar Cipher</option>
+                </select>
+            </div>
+        </p>
+        
+        <p class="gg">
+            <input type="text" id="encryptionKey" placeholder="Enter encryption key">
+        </p>
 
-    <input type="text" id="messageInput" placeholder="Type your message here">
-    <button id="sendMessageButton">Send Message to Server 2</button>
+        <p class="hh">
+            <input type="text" id="messageInput" placeholder="Type your message here">
+        </p>
+        <button id="sendMessageButton">Send Message to Server 2</button>
+    </div>
 
     <script>
         const socket = io.connect('http://localhost:3000');
@@ -35,18 +48,15 @@
         const encryptionKey = document.getElementById('encryptionKey');
         const receivedMessages = document.getElementById('receivedMessages');
 
-        // Encryption functions (add actual implementation for each)
         function encryptMessage(message, technique, key) {
             switch (technique) {
                 case 'caesar':
                     return caesarCipher(message, key);
-                // Add implementations for other ciphers here
                 default:
-                    return message; // Return original message if no valid technique is selected
+                    return message;
             }
         }
 
-        // Example: Caesar cipher function
         function caesarCipher(message, key) {
             const shift = parseInt(key);
             return message
@@ -60,16 +70,13 @@
             const technique = encryptionTechnique.value;
             const key = encryptionKey.value;
 
-            // Encrypt the message
             const encryptedMessage = encryptMessage(message, technique, key);
-
-            // Send message to Server 2 along with encryption details
             socket.emit('message', { message: encryptedMessage, technique, key });
-            messageInput.value = ''; // Clear input
+            messageInput.value = '';
         };
 
         socket.on('message', (msg) => {
-            receivedMessages.value += `Message: ${msg.message}\nTechnique: ${msg.technique}\nKey: ${msg.key}\n\n`; // Update textarea with received message
+            receivedMessages.value += `Message: ${msg.message}\nTechnique: ${msg.technique}\nKey: ${msg.key}\n\n`;
         });
     </script>
 </body>
