@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server 1</title>
+    <script src="/socket.io/socket.io.js"></script> <!-- Include Socket.io -->
+</head>
+<body>
+    <h1>Server 1</h1>
+    <textarea id="receivedMessages" rows="10" cols="30" placeholder="Received Messages"></textarea><br>
+    
+    <!-- Dropdown to select encryption technique -->
+    <label for="encryptionTechnique">Select Encryption Technique:</label>
+    <select id="encryptionTechnique">
+        <option value="caesar">Caesar Cipher</option>
+        <option value="playfair">Playfair Cipher</option>
+        <option value="hill">Hill Cipher</option>
+        <option value="verman">Verman Cipher</option>
+        <option value="modifiedCaesar">Modified Caesar Cipher</option>
+    </select><br>
+    
+    <!-- Input for encryption key -->
+    <input type="text" id="encryptionKey" placeholder="Enter encryption key"><br>
+
+    <input type="text" id="messageInput" placeholder="Type your message here">
+    <button id="sendMessageButton">Send Message to Server 2</button>
+
+    <script>
+        const socket = io.connect('http://localhost:3000');
+
+        const sendMessageButton = document.getElementById('sendMessageButton');
+        const messageInput = document.getElementById('messageInput');
+        const encryptionTechnique = document.getElementById('encryptionTechnique');
+        const encryptionKey = document.getElementById('encryptionKey');
+        const receivedMessages = document.getElementById('receivedMessages');
+
+        // Encryption functions (add actual implementation for each)
+        function encryptMessage(message, technique, key) {
+            switch (technique) {
+                case 'caesar':
+                    return caesarCipher(message, key);
+                // Add implementations for other ciphers here
+                default:
+                    return message; // Return original message if no valid technique is selected
+            }
+        }
+
+        // Example: Caesar cipher function
+        function caesarCipher(message, key) {
+            const shift = parseInt(key);
+            return message
+                .split('')
+                .map(char => String.fromCharCode(char.charCodeAt(0) + shift))
+                .join('');
+        }
+
+        sendMessageButton.onclick = () => {
+            const message = messageInput.value;
+            const technique = encryptionTechnique.value;
+            const key = encryptionKey.value;
+
+            // Encrypt the message
+            const encryptedMessage = encryptMessage(message, technique, key);
+
+            // Send message to Server 2 along with encryption details
+            socket.emit('message', { message: encryptedMessage, technique, key });
+            messageInput.value = ''; // Clear input
+        };
+
+        socket.on('message', (msg) => {
+            receivedMessages.value += `Message: ${msg.message}\nTechnique: ${msg.technique}\nKey: ${msg.key}\n\n`; // Update textarea with received message
+        });
+    </script>
+</body>
+</html>
