@@ -4,16 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Server 2</title>
+    <link rel="stylesheet" href="styles.css">
     <script src="/socket.io/socket.io.js"></script> <!-- Include Socket.io -->
+
+   
 </head>
 <body>
-    <h1>Server 2</h1>
-    <textarea id="receivedMessages" rows="10" cols="30" placeholder="Received Messages"></textarea><br>
+    <div class="container">
+        <nav> <h1>Server 2</h1> </nav>
+        <textarea id="receivedMessages" rows="10" placeholder="Received Messages" readonly></textarea><br>
 
-    <!-- Input for decryption key -->
-    <input type="text" id="decryptionKey" placeholder="Enter decryption key"><br>
-    
-    <button id="decryptMessageButton">Decrypt Message</button>
+        <!-- Input for decryption key -->
+        <input type="text" id="decryptionKey" placeholder="Enter decryption key"><br>
+        
+        <button id="decryptMessageButton">Decrypt Message</button>
+    </div>
 
     <script>
         const socket = io.connect('http://localhost:4000');
@@ -50,7 +55,6 @@
 
         decryptMessageButton.onclick = () => {
             const decryptedMessage = decryptMessage(lastReceivedMessage.message, lastReceivedMessage.technique, lastReceivedMessage.key);
-
             receivedMessages.value += `Decrypted Message: ${decryptedMessage}\n\n`; // Display decrypted message
         };
     </script>
