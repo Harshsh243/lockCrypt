@@ -4,59 +4,110 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Server 2</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="/socket.io/socket.io.js"></script> <!-- Include Socket.io -->
+    <script src="/socket.io/socket.io.js"></script>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #74ebd5 0%, #ACB6E5 100%);
+            animation: backgroundChange 10s infinite alternate;
+        }
+        
+        @keyframes backgroundChange {
+            0% {
+                background: linear-gradient(135deg, #74ebd5 0%, #ACB6E5 100%);
+            }
+            100% {
+                background: linear-gradient(135deg, #ACB6E5 0%, #74ebd5 100%);
+            }
+        }
 
-   
+        #container {
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        textarea, input, button {
+            margin: 10px 0;
+            padding: 10px;
+            width: 80%;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <nav> <h1>Server 2</h1> </nav>
-        <textarea id="receivedMessages" rows="10" placeholder="Received Messages" readonly></textarea><br>
-
-        <!-- Input for decryption key -->
+    <div id="container">
+        <h1>Server 2</h1>
+        <textarea id="receivedMessages" rows="10" cols="30" placeholder="Received Messages"></textarea><br>
+        <label for="decryptionKey">Decryption Key:</label>
         <input type="text" id="decryptionKey" placeholder="Enter decryption key"><br>
-        
-        <button id="decryptMessageButton">Decrypt Message</button>
+        <button id="decryptButton">Decrypt Message</button>
     </div>
 
     <script>
         const socket = io.connect('http://localhost:4000');
-        
+        const decryptionKey = document.getElementById('decryptionKey');
         const receivedMessages = document.getElementById('receivedMessages');
-        const decryptMessageButton = document.getElementById('decryptMessageButton');
-        
-        let lastReceivedMessage = ''; // Store the last received message object
+        let lastEncryptedMessage = '';
+        let encryptionData = {};
 
-        // Decryption functions (implement the actual decryption logic)
-        function decryptMessage(message, technique, key) {
-            switch (technique) {
-                case 'caesar':
-                    return caesarCipherDecrypt(message, key);
-                // Add implementations for other ciphers here
-                default:
-                    return message; // Return original message if no valid technique is selected
+        socket.on('message', (data) => {
+        lastEncryptedMessage = data.message;
+         encryptionData = data; // Save encryption data for decryption
+
+           // Generate a string of asterisks with the same length as the encrypted message
+            const maskedMessage = '*'.repeat(data.message.length);
+
+            receivedMessages.value += `Encrypted Message: ${maskedMessage}\nTechnique: ${data.technique}\n\n`; // Display message as asterisks and technique only
+        });
+
+
+        document.getElementById('decryptButton').onclick = () => {
+            const userDecryptionKey = decryptionKey.value;
+
+            if (userDecryptionKey === encryptionData.key) {
+                const decryptedMessage = decryptMessage(lastEncryptedMessage, userDecryptionKey, encryptionData.technique);
+                receivedMessages.value += `Decrypted Message: ${decryptedMessage}\n\n`; // Show decrypted message
+            } else {
+                receivedMessages.value += `Keys don't match, sorry.\n\n`; // Display error message
+            }
+        };
+
+        function decryptMessage(encryptedMessage, key, technique) {
+            // Placeholder for decryption logic
+            return encryptedMessage; // Modify this to actually decrypt the message
+        }
+        let sessionTime = 300; // 300 seconds (5 minutes)
+    
+           // Create the countdown element
+           const countdownElement = document.createElement('div');
+           countdownElement.style.position = 'absolute';
+            countdownElement.style.top = '10px';
+             countdownElement.style.right = '10px';
+           countdownElement.style.fontWeight = 'bold';
+          countdownElement.style.fontSize = '18px';
+ 
+      document.body.appendChild(countdownElement);
+
+        function updateCountdown() {
+          if (sessionTime > 0) {
+            countdownElement.innerHTML = `Your session ends in <span style="color: maroon;">${sessionTime}</span> seconds.`;
+          sessionTime--;
+         } else {
+           window.location.href = 'home.html'; // Redirect to home.html after time is up
             }
         }
 
-        // Example: Caesar cipher decryption function
-        function caesarCipherDecrypt(message, key) {
-            const shift = parseInt(key);
-            return message
-                .split('')
-                .map(char => String.fromCharCode(char.charCodeAt(0) - shift))
-                .join('');
-        }
-
-        socket.on('message', (msg) => {
-            lastReceivedMessage = msg; // Store the last message received
-            receivedMessages.value += `Encrypted Message: ${msg.message}\nTechnique: ${msg.technique}\nKey: ${msg.key}\n\n`;
-        });
-
-        decryptMessageButton.onclick = () => {
-            const decryptedMessage = decryptMessage(lastReceivedMessage.message, lastReceivedMessage.technique, lastReceivedMessage.key);
-            receivedMessages.value += `Decrypted Message: ${decryptedMessage}\n\n`; // Display decrypted message
-        };
+         // Start the countdown
+         setInterval(updateCountdown, 1000); // Update every second
+        
     </script>
 </body>
 </html>
