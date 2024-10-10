@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scrollable Text Box</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            transition: background-color 0.3s, color 0.3s; /* Smooth transition for dark mode */
+            text-align: center; /* Center text for paragraphs */
+        }
+        h1 {
+            font-size: 80px;
+            color: #333;
+            text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.3);
+            font-family: 'Poppins', sans-serif;
+            letter-spacing: 2px;
+            margin-top: 20px;
+            animation: move 7s infinite alternate;
+            width: 100%;
+            position: relative;
+        }
+        @keyframes move {
+            0% {
+                transform: translateX(-100%);
+            }
+            100% {
+                transform: translateX(100%);
+            }
+        }
+        .scrollable-box {
+            width: 300px;
+            height: 700px;
+            overflow-y: scroll;
+            border: 1px solid #ccc;
+            padding: 10px;
+            box-sizing: border-box;
+            background-color: #f9f9f9;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .dark-mode {
+            background-color: #121212;
+            color: white;
+        }
+        .dark-mode .scrollable-box {
+            background-color: #333;
+            border-color: #555;
+        }
+        /* Dark Mode Button */
+        .dark-mode-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #333;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .dark-mode-btn:hover {
+            background-color: #555;
+        }
+        /* Dark mode button for light mode */
+        body.light-mode .dark-mode-btn {
+            background-color: #ccc;
+            color: black;
+        }
+        body.light-mode .dark-mode-btn:hover {
+            background-color: #aaa;
+        }
+        .centered-paragraph {
+            margin: 10px 0; /* Space between paragraphs */
+            color: #333; /* Color for the paragraphs */
+        }
+    </style>
+</head>
+<body class="light-mode"> <!-- Default to light mode -->
+    
+    <button class="dark-mode-btn" onclick="toggleDarkMode()">Switch to Dark Mode</button>
+
+    <h1>Login Successful</h1>
+    <h2 class="centered-heading">Welcome to the Login Page</h2>
+
+    <p class="centered-paragraph">Welcome to your dashboard! Here, you can access various features.</p>
+    <p class="centered-paragraph">Feel free to explore the different tools available.</p>
+    <p class="centered-paragraph">If you need assistance, don't hesitate to reach out for help.</p>
+
+    <div class="scrollable-box">
+        <p><a href="1serhome.html">Server 1</a></p>
+        <p><a href="2serhome.html">Server 2</a></p>
+        <p><a href="cryptointro.html">Cryptography Introduction</a></p>
+        <p><a href="playfair.html">Playfair</a></p>
+        <p><a href="ceasarcipher.html">Ceasar Cipher</a></p>
+        <p><a href="hillcipher.html">Hill Cipher</a></p>
+        <p><a href="modifiedceasar.html">Modified Ceasar Cipher</a></p>
+        <p><a href="welcome.html">LOCK</a></p>
+        <p>More content here...</p>
+    </div>
+
+    <script>
+        function toggleDarkMode() {
+            const body = document.body;
+            body.classList.toggle('dark-mode'); // Add or remove 'dark-mode' class
+
+            // Update button text based on the current mode
+            const button = document.querySelector('.dark-mode-btn');
+            if (body.classList.contains('dark-mode')) {
+                button.textContent = 'Switch to Light Mode';
+            } else {
+                button.textContent = 'Switch to Dark Mode';
+            }
+        }
+    </script>
+</body>
+</html>
