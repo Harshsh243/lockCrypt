@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Playfair Cipher</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Lora:wght@400&display=swap" rel="stylesheet">
+    <style>
+        body {
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
+            background: url('crumbled paper.jpg') no-repeat center center;
+            background-size: cover;
+            background-attachment: fixed;
+            color: #333;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        h1 {
+            font-size: 80px;
+            color: #333;
+            text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.3);
+            font-family: 'Poppins', sans-serif;
+            letter-spacing: 2px;
+            margin-top: 20px;
+            animation: move 0.5s infinite alternate;
+            text-align: center;
+            width: 100%;
+        }
+
+        @keyframes move {
+            0% {
+                transform: translateY(0);
+            }
+            100% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .content {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            align-items: flex-start;
+        }
+
+        .text-container {
+            flex: 1;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 25px;
+            margin: 10px 0;
+            line-height: 1.5;
+            opacity: 1;
+            text-indent: 20px;
+            font-family: 'Lora', serif;
+        }
+
+        p:hover {
+            color: #007bff;
+            transform: scale(1.05);
+        }
+
+        .image-container {
+            width: 600px;
+            height: 300px;
+            margin-top: 20px;
+            align-self: center;
+        }
+
+        img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+
+        .image-container:hover img {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <h1>Playfair Cipher</h1>
+    <div class="content">
+        <div class="text-container">
+            <p>It was used for tactical purposes by British forces in the Second Boer War and in World War I and for the same purpose by the Australians during World War II. This was because Playfair is reasonably fast to use and requires no special equipment.</p>
+            <p>The Playfair cipher was the first practical digraph substitution cipher. The scheme was invented in 1854 by Charles Wheatstone but was named after Lord Playfair who promoted the use of the cipher. In playfair cipher unlike traditional cipher we encrypt a pair of alphabets(digraphs) instead of a single alphabet.</p>
+            <p>The technique encrypts pairs of letters (bigrams or digrams), instead of single letters as in the simple substitution cipher and rather more complex Vigenère cipher systems then in use. The Playfair cipher is thus significantly harder to break since the frequency analysis used for simple substitution ciphers does not work with it. The frequency analysis of bigrams is possible, but considerably more difficult.</p>
+        </div>
+
+        <!-- Image displayed below the paragraphs -->
+        <div class="image-container">
+            <img src="playfair.jpg" alt="Playfair Cipher">
+        </div>
+    </div>
+</body>
+</html>
