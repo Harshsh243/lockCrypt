@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ceasar Cipher</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Lora:wght@400&display=swap" rel="stylesheet">
+    <style>
+        body {
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
+            background: url('crumbled paper.jpg') no-repeat center center;
+            background-size: cover;
+            background-attachment: fixed;
+            color: #333;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        h1 {
+            font-size: 80px;
+            color: #333;
+            text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.3);
+            font-family: 'Poppins', sans-serif;
+            letter-spacing: 2px;
+            margin-top: 20px;
+            animation: move 0.5s infinite alternate;
+            text-align: center;
+            width: 100%;
+        }
+
+        @keyframes move {
+            0% {
+                transform: translateY(0);
+            }
+            100% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .content {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            align-items: flex-start;
+        }
+
+        .text-container {
+            flex: 1;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 25px;
+            margin: 10px 0;
+            line-height: 1.5;
+            opacity: 1;
+            text-indent: 20px;
+            font-family: 'Lora', serif;
+        }
+
+        p:hover {
+            color: #007bff;
+            transform: scale(1.05);
+        }
+
+        .image-container {
+            width: 400px;
+            height: 300px;
+            margin-top: 20px;
+            align-self: center;
+        }
+
+        img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+
+        .image-container:hover img {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <h1>Ceasar Cipher</h1>
+    <div class="content">
+        <div class="text-container">
+            <p>The Caesar cipher is a classic example of ancient cryptography that involves shifting each letter of a plaintext message by a certain number of letters, historically three. It is a type of substitution cipher where one letter is substituted for another in a consistent fashion.</p>
+            <p>The Caesar cipher is a classic example of ancient cryptography and is said to have been used by Julius Caesar. The Caesar cipher is based on transposition and involves shifting each letter of the plaintext message by a certain number of letters, historically three. The ciphertext can be decrypted by applying the same number of shifts in the opposite direction. This type of encryption is known as a substitution cipher, due to the substitution of one letter for another in a consistent fashion.A more recent variation of the Caesar cipher can be found in the ROT13 cipher. ROT13 uses the same mechanism as the Caesar cipher but moves each letter 13 places forward. </p>
+            <p> It works by shifting the letters in the plaintext message by a certain number of positions, known as the “shift” or “key”. The Caesar Cipher technique is one of the earliest and simplest methods of encryption techniques.It’s simply a type of substitution cipher, i.e., each letter of a given text is replaced by a letter with a fixed number of positions down the alphabet.</p>
+        </div>
+
+        <!-- Image displayed below the paragraphs -->
+        <div class="image-container">
+            <img src="ceasarcipher.jpg" alt="Ceasar Cipher">
+        </div>
+    </div>
+</body>
+</html>
