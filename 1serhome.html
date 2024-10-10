@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Playfair Cipher</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Lora:wght@400&display=swap" rel="stylesheet">
+    <style>
+        body {
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: url('crumbled paper.jpg') no-repeat center center;
+            background-size: cover;
+            background-attachment: fixed;
+            color: #333;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 80px;
+            color: #333;
+            text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.3);
+            font-family: 'Poppins', sans-serif;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            animation: move 0.5s infinite alternate;
+            text-align: center;
+        }
+
+        @keyframes move {
+            0% {
+                transform: translateY(0);
+            }
+            100% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .image-container {
+            width: 400px;
+            height: 300px;
+            margin-bottom: 20px;
+        }
+
+        img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+
+        .image-container:hover img {
+            transform: scale(1.1);
+        }
+
+        .button-container {
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 20px;
+            font-family: 'Poppins', sans-serif;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Chat With Server2</h1>
+    
+    <!-- Image container -->
+    <div class="image-container">
+        <img src="secured.jpg" alt="Playfair Cipher Image">
+    </div>
+    
+    <!-- Button container -->
+    <div class="button-container">
+        <button onclick="openServer1()">Open Server 1</button>
+    </div>
+
+    <script>
+        function openServer1() {
+            window.location.href = 'http://localhost:3000/server1.html';
+        }
+    </script>
+</body>
+</html>
