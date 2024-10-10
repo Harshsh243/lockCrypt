@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cryptography</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Roboto:wght@400&family=Lora:wght@400&display=swap" rel="stylesheet">
+    <style>
+        body {
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
+            background: url('crumbled paper.jpg') no-repeat center center;
+            background-size: cover;
+            background-attachment: fixed;
+            color: #333;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        h1 {
+            font-size: 80px;
+            color: #333;
+            text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.3);
+            font-family: 'Poppins', sans-serif;
+            letter-spacing: 2px;
+            margin-top: 20px;
+            animation: move 0.5s infinite alternate;
+            text-align: center;
+            width: 100%;
+        }
+
+        @keyframes move {
+            0% {
+                transform: translateY(0);
+            }
+            100% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .content {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            align-items: flex-start;
+        }
+
+        .text-container {
+            flex: 1;
+        }
+
+        p {
+            font-size: 25px;
+            margin: 10px 0;
+            line-height: 1.5;
+            opacity: 1;
+            text-indent: 40px;
+        }
+
+        p:hover {
+            color: #007bff;
+            transform: scale(1.05);
+        }
+
+        .para1, .para2, .para3, .para4, .para5 {
+            font-family: 'Roboto', sans-serif;
+            color: #460909;
+        }
+
+        .image-container-wrapper {
+            display: flex;
+            flex-direction: column; /* Align images vertically */
+            margin-left: auto; /* Push the image container to the right */
+        }
+
+        .image-container {
+            width: 400px;
+            height: 300px;
+            margin-bottom: 20px; /* Add space between images */
+        }
+
+        img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+
+        .image-container:hover img {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <h1>CrytoGraphy</h1>
+    <div class="content">
+        <div class="text-container">
+            <p class="para1">Cryptography is the process of hiding or coding information so that only the person a message was intended for can read it. It is a cybersecurity practice that uses algorithms and mathematical concepts to protect information from being read by unauthorized parties. It's used to secure digital communication, including text, images, audio, and video.</p>
+            <p class="para2">Modern cryptography techniques include algorithms and ciphers that enable the encryption and decryption of information, such as 128-bit and 256-bit encryption keys. Modern ciphers, such as the Advanced Encryption Standard (AES), are considered virtually unbreakable.Cryptography is an essential cybersecurity tool. Its use means that data and users have an additional layer of security that ensures privacy and confidentiality and helps keep data from being stolen by cybercriminals. In practice, cryptography has many applications</p>
+            <p class="para3">Public key cryptography enables secure key exchange over an insecure medium without the need to share a secret decryption key because the public key is only used in the encryption, but not the decryption process. In this way, asymmetric encryption adds an additional layer of security because an individuals private key is never shared.While asymmetric systems are often considered to be more secure due to their use of private keys, the true measure of a system’s strength is more dependent on key length and complexity.  </p>
+            <p class="para4">Cryptography has grown significantly more advanced over time. However, the general idea remains the same and has coalesced around four main principles: confidentiality, integrity, non-repudiation, and authentication.As our lives become increasingly digital, the need for cryptography to secure massive amounts of sensitive information has become even more imperative. Now, there are many ways in which cryptography is crucial in the online space. Encryption is an essential part of being online.</p>
+            <p class="para5">A cryptosystem is considered symmetrical when each party—sender and receiver—uses the same key to encrypt and decrypt data. RSA is one of the most common public key encryption algorithms.Asymmetric cryptography uses multiple keys—some shared and some private. In this way, the sender and receiver of an encrypted message have asymmetrical keys, and the system is asymmetrical. RSA—named after its progenitors Rivest, Shamir and Adleman—is one of the most common public key encryption algorithms.</p>
+        </div>
+        <!-- Image container wrapper to hold multiple images vertically -->
+        <div class="image-container-wrapper">
+            <div class="image-container">
+                <img src="Cryptography.jpg" alt="Cryptography Image 1">
+            </div>
+            <div class="image-container">
+                <img src="Cryptography2.jpg" alt="Cryptography Image 2">
+            </div>
+            <div class="image-container">
+                <img src="Cryptography3.jpg" alt="Cryptography Image 3">
+            </div>
+        </div>
+    </div>
+</body>
+</html>
