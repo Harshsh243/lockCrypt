@@ -4,38 +4,55 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Server 1</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="/socket.io/socket.io.js"></script> <!-- Include Socket.io -->
+    <script src="/socket.io/socket.io.js"></script>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #74ebd5 0%, #ACB6E5 100%);
+            animation: backgroundChange 10s infinite alternate;
+        }
 
-    
+        @keyframes backgroundChange {
+            0% { background: linear-gradient(135deg, #74ebd5 0%, #ACB6E5 100%); }
+            100% { background: linear-gradient(135deg, #ACB6E5 0%, #74ebd5 100%); }
+        }
+
+        #container {
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        textarea, input, select, button {
+            margin: 10px 0;
+            padding: 10px;
+            width: 80%;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+    </style>
 </head>
 <body>
-    <div class="background-overlay"></div> <!-- Texture overlay -->
-    <div class="container">
-        <nav> <h1>Server 1</h1> </nav>
-        <textarea id="receivedMessages" placeholder="Received Messages" readonly></textarea>
-        
-        <p class="ss">
-            
-            <div class="dropdown">
-                <select id="encryptionTechnique">
-                    <option value="" disabled selected>Select Encryption Technique</option>
-                    <option value="caesar">Caesar Cipher</option>
-                    <option value="playfair">Playfair Cipher</option>
-                    <option value="hill">Hill Cipher</option>
-                    <option value="verman">Verman Cipher</option>
-                    <option value="modifiedCaesar">Modified Caesar Cipher</option>
-                </select>
-            </div>
-        </p>
-        
-        <p class="gg">
-            <input type="text" id="encryptionKey" placeholder="Enter encryption key">
-        </p>
-
-        <p class="hh">
-            <input type="text" id="messageInput" placeholder="Type your message here">
-        </p>
+    <div id="container">
+        <h1>Server 1</h1>
+        <textarea id="receivedMessages" rows="10" cols="30" placeholder="Received Messages"></textarea><br>
+        <input type="text" id="messageInput" placeholder="Type your message here"><br>
+        <label for="encryptionKey">Encryption Key:</label>
+        <input type="text" id="encryptionKey" placeholder="Enter encryption key"><br>
+        <label for="technique">Select Technique:</label>
+        <select id="technique">
+            <option value="caesar">Caesar</option>
+            <option value="playfair">Playfair</option>
+            <option value="hill">Hill</option>
+            <option value="vernam">Vernam</option>
+            <option value="modifiedCaesar">Modified Caesar</option>
+        </select><br>
         <button id="sendMessageButton">Send Message to Server 2</button>
     </div>
 
@@ -44,40 +61,56 @@
 
         const sendMessageButton = document.getElementById('sendMessageButton');
         const messageInput = document.getElementById('messageInput');
-        const encryptionTechnique = document.getElementById('encryptionTechnique');
         const encryptionKey = document.getElementById('encryptionKey');
+        const technique = document.getElementById('technique');
         const receivedMessages = document.getElementById('receivedMessages');
-
-        function encryptMessage(message, technique, key) {
-            switch (technique) {
-                case 'caesar':
-                    return caesarCipher(message, key);
-                default:
-                    return message;
-            }
-        }
-
-        function caesarCipher(message, key) {
-            const shift = parseInt(key);
-            return message
-                .split('')
-                .map(char => String.fromCharCode(char.charCodeAt(0) + shift))
-                .join('');
-        }
 
         sendMessageButton.onclick = () => {
             const message = messageInput.value;
-            const technique = encryptionTechnique.value;
             const key = encryptionKey.value;
+            const selectedTechnique = technique.value;
 
-            const encryptedMessage = encryptMessage(message, technique, key);
-            socket.emit('message', { message: encryptedMessage, technique, key });
+            const encryptedMessage = encryptMessage(message, key, selectedTechnique);
+
+            socket.emit('message', {
+                message: encryptedMessage,
+                key: key,
+                technique: selectedTechnique
+            });
+
             messageInput.value = '';
         };
 
-        socket.on('message', (msg) => {
-            receivedMessages.value += `Message: ${msg.message}\nTechnique: ${msg.technique}\nKey: ${msg.key}\n\n`;
+        socket.on('message', (data) => {
+            receivedMessages.value += `Encrypted Message: ${data.message}\nTechnique: ${data.technique}, Key: ${data.key}\n\n`;
         });
+
+        function encryptMessage(message, key, technique) {
+            return message;
+        }
+        let sessionTime = 300; // 300 seconds (5 minutes)
+    
+    // Create the countdown element
+    const countdownElement = document.createElement('div');
+    countdownElement.style.position = 'absolute';
+    countdownElement.style.top = '10px';
+    countdownElement.style.right = '10px';
+    countdownElement.style.fontWeight = 'bold';
+    countdownElement.style.fontSize = '18px';
+    
+    document.body.appendChild(countdownElement);
+
+    function updateCountdown() {
+        if (sessionTime > 0) {
+            countdownElement.innerHTML = `<span style="color: maroon;">Your session ends</span> in ${sessionTime} seconds.`;
+            sessionTime--;
+        } else {
+            window.location.href = 'home.html'; // Redirect to home.html after time is up
+        }
+    }
+
+    // Start the countdown
+    setInterval(updateCountdown, 1000); // Update every second
     </script>
 </body>
 </html>
