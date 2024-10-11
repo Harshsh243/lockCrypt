@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scrollable Text Box with Thumbnail</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #e0eafc, #cfdef3);
+            color: #333;
+            text-align: center;
+            overflow: hidden;
+            transition: background 0.5s, color 0.5s;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        /* Navigation Bar Styles */
+        .navbar {
+            width: 100%;
+            background-color: #ffffff; /* White background for the navbar */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding: 10px 20px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between; /* Space between logo and links */
+        }
+
+        .navbar .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2980b9;
+        }
+
+        .nav-links {
+            display: flex;
+            flex-grow: 1; /* Allows the links to take up available space */
+            justify-content: center; /* Centers the links */
+        }
+
+        .nav-links a {
+            color: #2980b9;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 0 15px; /* Space between links */
+            padding: 5px 10px; /* Padding for clickable area */
+            font-size: 16px; /* Smaller font size */
+        }
+
+        .nav-links a:hover {
+            color: #1abc9c; /* Change color on hover */
+        }
+
+        .thumbnail-container {
+            width: 80%;
+            max-width: 600px; /* Max width for thumbnail */
+            margin: 80px auto 20px; /* Centered margin with navbar space */
+            cursor: pointer; /* Pointer cursor on hover */
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s;
+        }
+
+        .thumbnail-container:hover {
+            transform: scale(1.05); /* Slight zoom effect on hover */
+        }
+
+        .thumbnail {
+            width: 100%; /* Full width of container */
+            height: auto; /* Maintain aspect ratio */
+        }
+
+        .scrollable-box {
+            display: none; /* Initially hidden */
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            max-height: 800px; /* Maximum height */
+            overflow-y: auto;
+            border-radius: 20px;
+            padding: 40px; /* Increased padding for aesthetics */
+            box-sizing: border-box;
+            background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.8));
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInContainer 1s forwards;
+            font-size: 18px;
+            line-height: 1.6; /* Improved line spacing */
+        }
+
+        @keyframes fadeInContainer {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .dark-mode {
+            background: #2c3e50;
+            color: #ecf0f1;
+        }
+
+        .dark-mode .scrollable-box {
+            background: linear-gradient(to bottom right, rgba(40, 44, 52, 0.9), rgba(40, 44, 52, 0.8));
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .switch {
+            display: flex;
+            align-items: center;
+            height: 30px; /* Ensure it fits within the navbar height */
+            margin-left: 10px; /* Add a little space from the LOCK link */
+        }
+
+        .switch input {
+            display: none;
+        }
+
+        .slider {
+            width: 60px;
+            height: 30px;
+            background-color: #ccc;
+            border-radius: 34px;
+            position: relative;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer; /* Show pointer on hover */
+        }
+
+        .slider:before {
+            content: "";
+            position: absolute;
+            width: 28px;
+            height: 28px;
+            left: 1px;
+            bottom: 1px;
+            background-color: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+
+        input:checked + .slider {
+            background-color: #ff6a88;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(30px);
+        }
+
+        .icon {
+            width: 24px;
+            height: 24px;
+            transition: opacity 0.3s;
+            position: absolute;
+        }
+
+        .sun {
+            left: 4px;
+            opacity: 1;
+        }
+
+        .moon {
+            right: 4px;
+            opacity: 0;
+        }
+
+        input:checked + .slider .moon {
+            opacity: 1;
+        }
+
+        input:checked + .slider .sun {
+            opacity: 0;
+        }
+
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1000; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0, 0, 0, 0.5); /* Black w/ opacity */
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 15% auto; /* 15% from the top and centered */
+            padding: 20px;
+            border: 1px solid #888;
+            border-radius: 10px;
+            width: 80%; /* Could be more or less, depending on screen size */
+            max-width: 600px; /* Max width */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.5s; /* Fade in effect */
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .fullscreen-text {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            color: #2c3e50;
+            font-size: 32px;
+            text-align: center;
+            padding: 20px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+            opacity: 1;
+            animation: fadeInText 1s forwards, fadeOutText 2s forwards 3s;
+            z-index: 100;
+            border-radius: 20px;
+        }
+
+        @keyframes fadeInText {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        @keyframes fadeOutText {
+            0% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        .centered-paragraph {
+            margin: 15px 0;
+            font-size: 22px;
+            line-height: 1.6;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        a {
+            color: #2980b9;
+            text-decoration: none;
+            transition: color 0.3s;
+            font-weight: bold;
+            display: block;
+            margin: 0; /* No margin for links */
+            padding: 0; /* No padding for links */
+        }
+
+        a:hover {
+            color: #1abc9c;
+        }
+    </style>
+</head>
+<body class="light-mode">
+
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <div class="logo">MyLogo</div>
+        <div class="nav-links">
+            <a href="1serhome.html">Server 1</a>
+            <a href="2serhome.html">Server 2</a>
+            <a href="cryptointro.html">Cryptography Introduction</a>
+            <a href="playfair.html">Playfair</a>
+            <a href="ceasarcipher.html">Caesar Cipher</a>
+            <a href="hillcipher.html">Hill Cipher</a>
+            <a href="modifiedceasar.html">Modified Caesar Cipher</a>
+            <a href="welcome.html">LOCK</a>
+            <div class="switch">
+                <input type="checkbox" id="dark-mode-toggle" onclick="toggleDarkMode()">
+                <label class="slider" for="dark-mode-toggle">
+                    <img src="sun-icon.png" alt="Sun" class="icon sun">
+                    <img src="moon-icon.png" alt="Moon" class="icon moon">
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="fullscreen-text">
+        <div>
+            <p class="centered-paragraph">Welcome! You are now logged in.</p>
+            <p class="centered-paragraph">Explore the features available to you.</p>
+            <p class="centered-paragraph">Reach out if you need assistance.</p>
+        </div>
+    </div>
+
+    <!-- Thumbnail Container -->
+    <div class="thumbnail-container" onclick="openModal()">
+        <img src="thumbnail-image.jpg" alt="Thumbnail" class="thumbnail"> <!-- Replace with your thumbnail image -->
+    </div>
+
+    <!-- Modal for Information -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Cryptography Overview</h2>
+            <div class="scrollable-box">
+                <p>Cryptography is essential for securing communication, protecting sensitive data, and financial transactions. Today, we often see cryptography at work when we use applications that require passwords, such as email, online banking, and shopping sites.</p>
+                <p>Modern cryptography techniques include algorithms and ciphers that enable the encryption and decryption of information, such as 128-bit and 256-bit encryption keys. Modern ciphers, such as the Advanced Encryption Standard (AES), are considered virtually unbreakable. Cryptography is an essential cybersecurity tool. Its use means that data and users have an additional layer of security that ensures privacy and confidentiality and helps keep data from being stolen by cybercriminals. In practice, cryptography has many applications.</p>
+                <p>Public key cryptography enables secure key exchange over an insecure medium without the need to share a secret decryption key because the public key is only used in the encryption, but not the decryption process. In this way, asymmetric encryption adds an additional layer of security because an individual's private key is never shared. While asymmetric systems are often considered to be more secure due to their use of private keys, the true measure of a system’s strength is more dependent on key length and complexity.</p>
+                <p>Cryptography has grown significantly more advanced over time. However, the general idea remains the same and has coalesced around four main principles: confidentiality, integrity, non-repudiation, and authentication. As our lives become increasingly digital, the need for cryptography to secure massive amounts of sensitive information has become even more imperative. Now, there are many ways in which cryptography is crucial in the online space. Encryption is an essential part of being online.</p>
+                <p>A cryptosystem is considered symmetrical when each party—sender and receiver—uses the same key to encrypt and decrypt data. RSA is one of the most common public key encryption algorithms. Asymmetric cryptography uses multiple keys—some shared and some private. In this way, the sender and receiver of an encrypted message have asymmetrical keys, and the system is asymmetrical. RSA—named after its progenitors Rivest, Shamir, and Adleman—is one of the most common public key encryption algorithms.</p>
+                <p>Overall, the importance of cryptography in our daily lives cannot be overstated. It is the backbone of secure communication and data protection in today's digital age.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleDarkMode() {
+            const body = document.body;
+            body.classList.toggle('dark-mode');
+            const toggle = document.getElementById('dark-mode-toggle');
+            toggle.checked = body.classList.contains('dark-mode');
+        }
+
+        function openModal() {
+            document.getElementById("myModal").style.display = "flex"; // Show modal
+        }
+
+        function closeModal() {
+            document.getElementById("myModal").style.display = "none"; // Hide modal
+        }
+
+        // Close the modal when the user clicks outside of it
+        window.onclick = function(event) {
+            const modal = document.getElementById("myModal");
+            if (event.target == modal) {
+                closeModal();
+            }
+        };
+
+        setTimeout(() => {
+            document.querySelector('.fullscreen-text').style.display = 'none';
+            document.querySelector('.thumbnail-container').style.display = 'block'; // Show the thumbnail
+        }, 5000); // Time before fading in (5 seconds)
+    </script>
+</body>
+</html>
