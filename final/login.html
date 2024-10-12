@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Elegant Login Page</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Montserrat:wght@600&display=swap" rel="stylesheet">
+  <style>  
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(270deg, #e0f7fa, #80deea);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #333;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-container {
+      background-color: rgba(255, 255, 255, 0.95);
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+      width: 400px;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    h2 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 2.5em;
+      color: #00796b;
+      margin-bottom: 30px;
+    }
+
+    .input-group {
+      margin: 15px 0;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #00796b;
+      border-radius: 8px;
+      font-size: 1em;
+      outline: none;
+      background-color: rgba(240, 248, 255, 0.8);
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .input-group input:focus {
+      border-color: #004d40;
+      box-shadow: 0 0 8px rgba(0, 77, 64, 0.5);
+    }
+
+    .login-container button {
+      width: 100%;
+      padding: 12px;
+      background-color: #00796b;
+      border: none;
+      color: white;
+      border-radius: 8px;
+      font-size: 1em;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: background 0.3s, transform 0.2s;
+    }
+
+    .login-container button:hover {
+      background-color: #004d40;
+      transform: translateY(-2px);
+    }
+
+    .error-message {
+      color: red;
+      margin-top: 10px;
+      display: none;
+    }
+
+    /* Background shapes */
+    .shape {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.3; /* More faded */
+      z-index: 0;
+    }
+  </style>
+</head>
+<body>
+  <div id="shapes-container"></div>
+
+  <div class="login-container">
+    <h2>Login</h2>
+    <form id="loginForm">
+      <div class="input-group">
+        <input type="text" id="userid" placeholder="User ID" required>
+      </div>
+      <div class="input-group">
+        <input type="text" id="username" placeholder="Username" required>
+      </div>
+      <div class="input-group">
+        <input type="password" id="password" placeholder="Password" required>
+      </div>
+      <button type="submit">Login</button>
+      <p class="error-message" id="error-message">Wrong credentials. Please try again.</p>
+    </form>
+  </div>
+
+  <script>
+    const shapesContainer = document.getElementById('shapes-container');
+    const shapesCount = 20; // Number of shapes
+    const shapes = [];
+    const cursor = { x: 0, y: 0 };
+
+    // Create shapes with random properties
+    for (let i = 0; i < shapesCount; i++) {
+      const shape = document.createElement('div');
+      shape.classList.add('shape');
+
+      // Random size between 150px and 300px for bigger shapes
+      const size = Math.random() * 150 + 150;
+      shape.style.width = `${size}px`;
+      shape.style.height = shape.style.width;
+
+      // Random color with increased opacity
+      shape.style.backgroundColor = `rgba(42, 157, 244, ${Math.random() * 0.3 + 0.1})`;
+
+      // Random position
+      shape.style.top = `${Math.random() * window.innerHeight}px`;
+      shape.style.left = `${Math.random() * window.innerWidth}px`;
+
+      // Store initial velocities
+      shape.velocityX = (Math.random() - 0.5) * 2;
+      shape.velocityY = (Math.random() - 0.5) * 2;
+
+      shapes.push(shape);
+      shapesContainer.appendChild(shape);
+    }
+
+    // Track cursor movement
+    document.addEventListener('mousemove', (e) => {
+      cursor.x = e.clientX;
+      cursor.y = e.clientY;
+    });
+
+    function animateShapes() {
+      shapes.forEach(shape => {
+        let newX = parseFloat(shape.style.left) + shape.velocityX;
+        let newY = parseFloat(shape.style.top) + shape.velocityY;
+
+        // Collision detection with window edges
+        if (newX + parseFloat(shape.style.width) > window.innerWidth || newX < 0) {
+          shape.velocityX *= -1; // Reverse direction
+        }
+        if (newY + parseFloat(shape.style.height) > window.innerHeight || newY < 0) {
+          shape.velocityY *= -1; // Reverse direction
+        }
+
+        // Move shapes away from the cursor
+        const interactionDistance = 100; // Decreased distance threshold for increased sensitivity
+        let dx = (newX + parseFloat(shape.style.width) / 2) - cursor.x;
+        let dy = (newY + parseFloat(shape.style.height) / 2) - cursor.y;
+        let distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance < interactionDistance) {
+          const force = 100; // Increased strength of the movement
+          const angle = Math.atan2(dy, dx);
+          newX += Math.cos(angle) * force / distance;
+          newY += Math.sin(angle) * force / distance;
+        }
+
+        shape.style.left = `${newX}px`;
+        shape.style.top = `${newY}px`;
+      });
+
+      requestAnimationFrame(animateShapes);
+    }
+
+    animateShapes();
+
+    // Redirect on successful login
+    document.getElementById('loginForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      // Simulate successful login (add your own validation logic here)
+      const userId = document.getElementById('userid').value;
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      // For demonstration, assume any non-empty credentials are valid
+      if (userId && username && password) {
+        // Redirect to the second page after successful login
+        window.location.href = 'sample.html'; // Changed to sample.html
+      } else {
+        document.getElementById('error-message').style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html>

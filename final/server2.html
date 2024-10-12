@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server 2</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Montserrat:wght@600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #74ebd5, #ACB6E5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            width: 400px;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.5em;
+            color: #00796b;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .input-group {
+            margin: 15px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .input-group label {
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #00796b;
+        }
+
+        .input-group input {
+            padding: 12px;
+            border: 2px solid #00796b;
+            border-radius: 8px;
+            font-size: 1em;
+            outline: none;
+            background-color: rgba(240, 248, 255, 0.9);
+            transition: border-color 0.3s, box-shadow 0.3s;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .input-group input:focus {
+            border-color: #004d40;
+            box-shadow: 0 0 8px rgba(0, 77, 64, 0.5);
+        }
+
+        button {
+            padding: 12px;
+            background-color: #00796b;
+            border: none;
+            color: white;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background 0.3s, transform 0.2s;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        button:hover {
+            background-color: #004d40;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        #receivedMessages {
+            height: 150px; 
+            border: 2px solid #00796b;
+            border-radius: 8px;
+            padding: 10px;
+            background-color: rgba(240, 248, 255, 0.9);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            text-align: left;
+            font-family: 'Courier New', Courier, monospace;
+            color: #333;
+            margin-bottom: 20px; 
+            resize: none; 
+        }
+
+        .countdown {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-weight: bold;
+            font-size: 18px;
+            color: maroon;
+        }
+
+        /* Background shapes */
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.3; /* Increased opacity for more translucency */
+            z-index: 0;
+            border: 2px solid rgba(255, 255, 255, 0.5); /* Soft white border */
+        }
+    </style>
+</head>
+<body>
+    <div id="shapes-container"></div>
+
+    <div id="container">
+        <h1>Server 2</h1>
+        <textarea id="receivedMessages" rows="10" placeholder="Received Messages" readonly></textarea>
+        
+        <div class="input-group">
+            <label for="decryptionKey">Decryption Key:</label>
+            <input type="text" id="decryptionKey" placeholder="Enter decryption key">
+        </div>
+        
+        <button id="decryptButton">Decrypt Message</button>
+    </div>
+
+    <div class="countdown" id="countdownElement">Your session ends in <span id="sessionTime">300</span> seconds.</div>
+
+    <script>
+        const shapesContainer = document.getElementById('shapes-container');
+        const shapesCount = 20; // Number of shapes
+        const shapes = [];
+        const cursor = { x: 0, y: 0 };
+
+        // Create shapes with random properties
+        for (let i = 0; i < shapesCount; i++) {
+            const shape = document.createElement('div');
+            shape.classList.add('shape');
+
+            const size = Math.random() * 80 + 120; // Random size between 120px and 200px
+            shape.style.width = `${size}px`;
+            shape.style.height = shape.style.width;
+
+            // Lighter, more translucent color
+            shape.style.backgroundColor = `rgba(42, 157, 244, 0.3)`; 
+
+            shape.style.top = `${Math.random() * window.innerHeight}px`;
+            shape.style.left = `${Math.random() * window.innerWidth}px`;
+
+            shape.velocityX = (Math.random() - 0.5) * 2;
+            shape.velocityY = (Math.random() - 0.5) * 2;
+
+            shapes.push(shape);
+            shapesContainer.appendChild(shape);
+        }
+
+        // Track cursor movement
+        document.addEventListener('mousemove', (e) => {
+            cursor.x = e.clientX;
+            cursor.y = e.clientY;
+        });
+
+        function animateShapes() {
+            shapes.forEach(shape => {
+                let newX = parseFloat(shape.style.left) + shape.velocityX;
+                let newY = parseFloat(shape.style.top) + shape.velocityY;
+
+                // Collision detection with window edges
+                if (newX + parseFloat(shape.style.width) > window.innerWidth || newX < 0) {
+                    shape.velocityX *= -1; // Reverse direction
+                }
+                if (newY + parseFloat(shape.style.height) > window.innerHeight || newY < 0) {
+                    shape.velocityY *= -1; // Reverse direction
+                }
+
+                // Move shapes away from the cursor
+                const interactionDistance = 100; // Distance threshold
+                let dx = (newX + parseFloat(shape.style.width) / 2) - cursor.x;
+                let dy = (newY + parseFloat(shape.style.height) / 2) - cursor.y;
+                let distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance < interactionDistance) {
+                    const force = 100; // Strength of the movement
+                    const angle = Math.atan2(dy, dx);
+                    newX += Math.cos(angle) * force / distance;
+                    newY += Math.sin(angle) * force / distance;
+                }
+
+                shape.style.left = `${newX}px`;
+                shape.style.top = `${newY}px`;
+            });
+
+            requestAnimationFrame(animateShapes);
+        }
+
+        animateShapes();
+
+        const socket = io.connect('http://localhost:4000');
+        const decryptionKey = document.getElementById('decryptionKey');
+        const receivedMessages = document.getElementById('receivedMessages');
+        const countdownElement = document.getElementById('sessionTime');
+        let lastEncryptedMessage = '';
+        let encryptionData = {};
+        let sessionTime = 300; // 300 seconds (5 minutes)
+
+        socket.on('message', (data) => {
+            lastEncryptedMessage = data.message;
+            encryptionData = data; // Save encryption data for decryption
+
+            const maskedMessage = '*'.repeat(data.message.length);
+            receivedMessages.value += `Encrypted Message: ${maskedMessage}\nTechnique: ${data.technique}\n\n`; // Display message as asterisks and technique only
+        });
+
+        document.getElementById('decryptButton').onclick = () => {
+            const userDecryptionKey = decryptionKey.value;
+
+            if (userDecryptionKey === encryptionData.key) {
+                const decryptedMessage = decryptMessage(lastEncryptedMessage, userDecryptionKey, encryptionData.technique);
+                receivedMessages.value += `Decrypted Message: ${decryptedMessage}\n\n`; // Show decrypted message
+            } else {
+                receivedMessages.value += `Keys don't match, sorry.\n\n`; // Display error message
+            }
+        };
+
+        function decryptMessage(encryptedMessage, key, technique) {
+            return encryptedMessage; // Placeholder for decryption logic
+        }
+
+        function updateCountdown() {
+            if (sessionTime > 0) {
+                countdownElement.innerHTML = sessionTime;
+                sessionTime--;
+            } else {
+                window.location.href = 'home.html'; // Redirect to home.html after time is up
+            }
+        }
+
+        // Start the countdown
+        setInterval(updateCountdown, 1000); // Update every second
+    </script>
+</body>
+</html>

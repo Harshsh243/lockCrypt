@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scrollable Text Box with Thumbnails</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Montserrat:wght@500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="sample.css">
+    
+</head>
+<body class="light-mode">
+
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <div class="logo">
+            <img src="Screenshot 2024-10-12 140833.jpg" class="logo-img" alt="Logo">
+        </div>
+        
+        <div class="nav-links">
+            <a href="login.html">Home</a>
+            <a href="1serhome.html" target="_blank">Server 1</a>
+            <a href="2serhome.html" target="_blank">Server 2</a>
+            <a href="lock.html">Lock</a>
+            <a href="aboutus.html">About us</a>
+            <div class="switch">
+                <input type="checkbox" id="dark-mode-toggle" onclick="toggleDarkMode()">
+                <label class="slider" for="dark-mode-toggle">
+                    <img src="sun-icon.png" alt="Sun" class="icon sun">
+                    <img src="moon-icon.png" alt="Moon" class="icon moon">
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="fullscreen-text">
+        <div>
+            <p class="centered-paragraph">Welcome! You are now logged in.</p>
+            <p class="centered-paragraph">Explore the features available to you.</p>
+            <p class="centered-paragraph">Reach out if you need assistance.</p>
+        </div>
+    </div>
+
+    <!-- Thumbnail Container Wrapper -->
+    <div class="thumbnail-container-wrapper">
+        <div class="thumbnail-container" onclick="openModal('modal1')">
+            <img src="your-image-file-1.jpg" alt="Cryptography Overview" class="thumbnail">
+            <div class="thumbnail-name">Cryptography</div>
+        </div>
+    
+        <div class="thumbnail-container" onclick="openModal('modal2')">
+            <img src="your-image-file-2.jpg" alt="Another Topic Overview" class="thumbnail">
+            <div class="thumbnail-name">Playfair</div>
+        </div>
+    
+        <div class="thumbnail-container" onclick="openModal('modal3')">
+            <img src="your-image-file-3.jpg" alt="Third Topic Overview" class="thumbnail">
+            <div class="thumbnail-name">Caesar Cipher</div>
+        </div>
+    
+        <div class="thumbnail-container" onclick="openModal('modal4')">
+            <img src="your-image-file-4.jpg" alt="Fourth Topic Overview" class="thumbnail">
+            <div class="thumbnail-name">Hill Cipher</div>
+        </div>
+    
+        <div class="thumbnail-container" onclick="openModal('modal5')">
+            <img src="your-image-file-5.jpg" alt="Fifth Topic Overview" class="thumbnail">
+            <div class="thumbnail-name">Modified Caesar Cipher</div>
+        </div>
+    </div>
+    
+
+    <!-- First Modal for Information -->
+    <div id="modal1" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('modal1')">&times;</span>
+            <h2>Cryptography</h2>
+            <div class="scrollable-box">
+                <p>Cryptography is the process of hiding or coding information so that only the person a message was intended for can read it. It is a cybersecurity practice that uses algorithms and mathematical concepts to protect information from being read by unauthorized parties. It's used to secure digital communication, including text, images, audio, and video.</p>
+
+                <p>Modern cryptography techniques include algorithms and ciphers that enable the encryption and decryption of information, such as 128-bit and 256-bit encryption keys. Modern ciphers, such as the Advanced Encryption Standard (AES), are considered virtually unbreakable.Cryptography is an essential cybersecurity tool. Its use means that data and users have an additional layer of security that ensures privacy and confidentiality and helps keep data from being stolen by cybercriminals. In practice, cryptography has many applications</p>
+
+                <p>Public key cryptography enables secure key exchange over an insecure medium without the need to share a secret decryption key because the public key is only used in the encryption, but not the decryption process. In this way, asymmetric encryption adds an additional layer of security because an individuals private key is never shared.While asymmetric systems are often considered to be more secure due to their use of private keys, the true measure of a system’s strength is more dependent on key length and complexity.  </p>
+
+                <p>Cryptography has grown significantly more advanced over time. However, the general idea remains the same and has coalesced around four main principles: confidentiality, integrity, non-repudiation, and authentication.As our lives become increasingly digital, the need for cryptography to secure massive amounts of sensitive information has become even more imperative. Now, there are many ways in which cryptography is crucial in the online space. Encryption is an essential part of being online.</p>
+
+                <p>A cryptosystem is considered symmetrical when each party—sender and receiver—uses the same key to encrypt and decrypt data. RSA is one of the most common public key encryption algorithms.Asymmetric cryptography uses multiple keys—some shared and some private. In this way, the sender and receiver of an encrypted message have asymmetrical keys, and the system is asymmetrical. RSA—named after its progenitors Rivest, Shamir and Adleman—is one of the most common public key encryption algorithms.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Second Modal for Information -->
+    <div id="modal2" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('modal2')">&times;</span>
+            <h2>Playfair</h2>
+            <div class="scrollable-box">
+                <p>It was used for tactical purposes by British forces in the Second Boer War and in World War I and for the same purpose by the Australians during World War II. This was because Playfair is reasonably fast to use and requires no special equipment.</p>
+
+                <p>The Playfair cipher was the first practical digraph substitution cipher. The scheme was invented in 1854 by Charles Wheatstone but was named after Lord Playfair who promoted the use of the cipher. In playfair cipher unlike traditional cipher we encrypt a pair of alphabets(digraphs) instead of a single alphabet.</p>
+                
+                <p>The technique encrypts pairs of letters (bigrams or digrams), instead of single letters as in the simple substitution cipher and rather more complex Vigenère cipher systems then in use. The Playfair cipher is thus significantly harder to break since the frequency analysis used for simple substitution ciphers does not work with it. The frequency analysis of bigrams is possible, but considerably more difficult.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Third Modal for Information -->
+    <div id="modal3" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('modal3')">&times;</span>
+            <h2>CAESAR CIPHER</h2>
+            <div class="scrollable-box">
+                <p>The Caesar cipher is a classic example of ancient cryptography that involves shifting each letter of a plaintext message by a certain number of letters, historically three. It is a type of substitution cipher where one letter is substituted for another in a consistent fashion.</p>
+            <p>The Caesar cipher is a classic example of ancient cryptography and is said to have been used by Julius Caesar. The Caesar cipher is based on transposition and involves shifting each letter of the plaintext message by a certain number of letters, historically three. The ciphertext can be decrypted by applying the same number of shifts in the opposite direction. This type of encryption is known as a substitution cipher, due to the substitution of one letter for another in a consistent fashion.A more recent variation of the Caesar cipher can be found in the ROT13 cipher. ROT13 uses the same mechanism as the Caesar cipher but moves each letter 13 places forward. </p>
+            <p> It works by shifting the letters in the plaintext message by a certain number of positions, known as the “shift” or “key”. The Caesar Cipher technique is one of the earliest and simplest methods of encryption techniques.It’s simply a type of substitution cipher, i.e., each letter of a given text is replaced by a letter with a fixed number of positions down the alphabet.</p>
+        </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Fourth Modal for Information -->
+    <div id="modal4" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('modal4')">&times;</span>
+            <h2>HILL CIPHER</h2>
+            <div class="scrollable-box">
+                <p>In classical cryptography, the Hill cipher is a polygraphic substitution cipher based on linear algebra. Invented by Lester S. Hill in 1929, it was the first polygraphic cipher in which it was practical (though barely) to operate on more than three symbols at once.</p>
+            <p>To encrypt a message, each block of n letters (considered as an n-component vector) is multiplied by an invertible n × n matrix, against modulus 26. To decrypt the message, each block is multiplied by the inverse of the matrix used for encryption.The matrix used for encryption is the cipher key, and it should be chosen randomly from the set of invertible n × n matrices (modulo 26). The cipher can, of course, be adapted to an alphabet with any number of letters; all arithmetic just needs to be done modulo the number of letters instead of modulo 26. </p>
+            <p> When operating on 2 symbols at once, a Hill cipher offers no particular advantage over Playfair or the bifid cipher, and in fact is weaker than either, and slightly more laborious to operate by pencil-and-paper. As the dimension increases, the cipher rapidly becomes infeasible for a human to operate by hand.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fifth Modal for Information -->
+    <div id="modal5" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('modal5')">&times;</span>
+            <h2>MODIFIED CAESAR CIPHER</h2>
+            <div class="scrollable-box">
+                <p>A modified Caesar cipher is a variation of the Caesar cipher that produces ciphertext that is easier to read and harder to crack. It's a basic encryption technique that replaces each letter in the plaintext with a letter that's a certain number of places down the alphabet. 
+                </p>
+                <p>To encrypt a message proposed algorithm requires plaintext and encryption key. The encryption key is an integer value and it determines alphabet to be used for substitution. It is  based on modulo twenty six arithmetic to ensure that integer  value wraps round in case encryption key supplied is more than twenty six </p>
+                <p> When operating on 2 symbols at once, a Hill cipher offers no particular advantage over Playfair or the bifid cipher, and in fact is weaker than either, and slightly more laborious to operate by pencil-and-paper. As the dimension increases, the cipher rapidly becomes infeasible for a human to operate by hand.</p>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="sample.js"></script>
+    
+</body>
+</html>

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server 1</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Montserrat:wght@600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(270deg, #e0f7fa, #80deea);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-container {
+            background: linear-gradient(145deg, #ffffff, #e6e6e6);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            width: 400px;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .login-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.5em;
+            color: #00796b;
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            margin: 15px 0;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .input-group label {
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .input-group input, 
+        .input-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #00796b;
+            border-radius: 8px;
+            font-size: 1em;
+            outline: none;
+            background-color: rgba(240, 248, 255, 0.8);
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .input-group input:focus, 
+        .input-group select:focus {
+            border-color: #004d40;
+            box-shadow: 0 0 8px rgba(0, 77, 64, 0.5);
+        }
+
+        .login-container button {
+            width: 100%;
+            padding: 12px;
+            background-color: #00796b;
+            border: none;
+            color: white;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        .login-container button:hover {
+            background-color: #004d40;
+            transform: translateY(-2px);
+        }
+
+        .received-messages {
+            width: 100%;
+            height: 150px; 
+            border: 2px solid #00796b;
+            border-radius: 8px;
+            padding: 10px;
+            background-color: rgba(240, 248, 255, 0.9);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            text-align: left;
+            font-family: 'Courier New', Courier, monospace;
+            color: #333;
+            margin-bottom: 20px; 
+            resize: none; 
+        }
+
+        .error-message {
+            color: red;
+            margin-top: 10px;
+            display: none;
+        }
+
+        /* Background shapes */
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.3;
+            z-index: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="shapes-container"></div>
+
+    <div class="login-container">
+        <h1>Server 1</h1>
+        <textarea class="received-messages" id="receivedMessages" rows="10" placeholder="Received Messages" readonly></textarea>
+        
+        <div class="input-group">
+            <input type="text" id="messageInput" placeholder="Type your message here" required>
+        </div>
+        
+        <div class="input-group">
+            <label for="encryptionKey">Encryption Key:</label>
+            <input type="text" id="encryptionKey" placeholder="Enter encryption key">
+        </div>
+
+        <div class="input-group">
+            <label for="technique">Select Technique:</label>
+            <select id="technique">
+                <option value="caesar">Caesar</option>
+                <option value="playfair">Playfair</option>
+                <option value="hill">Hill</option>
+                <option value="vernam">Vernam</option>
+                <option value="modifiedCaesar">Modified Caesar</option>
+            </select>
+        </div>
+
+        <button id="sendMessageButton">Send Message to Server 2</button>
+        <p class="error-message" id="error-message">Wrong credentials. Please try again.</p>
+    </div>
+
+    <script>
+        const shapesContainer = document.getElementById('shapes-container');
+        const shapesCount = 20; // Number of shapes
+        const shapes = [];
+        const cursor = { x: 0, y: 0 };
+
+        // Create shapes with random properties
+        for (let i = 0; i < shapesCount; i++) {
+            const shape = document.createElement('div');
+            shape.classList.add('shape');
+
+            const size = Math.random() * 150 + 150;
+            shape.style.width = `${size}px`;
+            shape.style.height = shape.style.width;
+
+            shape.style.backgroundColor = `rgba(42, 157, 244, ${Math.random() * 0.3 + 0.1})`;
+            shape.style.top = `${Math.random() * window.innerHeight}px`;
+            shape.style.left = `${Math.random() * window.innerWidth}px`;
+
+            shape.velocityX = (Math.random() - 0.5) * 2;
+            shape.velocityY = (Math.random() - 0.5) * 2;
+
+            shapes.push(shape);
+            shapesContainer.appendChild(shape);
+        }
+
+        document.addEventListener('mousemove', (e) => {
+            cursor.x = e.clientX;
+            cursor.y = e.clientY;
+        });
+
+        function animateShapes() {
+            shapes.forEach(shape => {
+                let newX = parseFloat(shape.style.left) + shape.velocityX;
+                let newY = parseFloat(shape.style.top) + shape.velocityY;
+
+                if (newX + parseFloat(shape.style.width) > window.innerWidth || newX < 0) {
+                    shape.velocityX *= -1; 
+                }
+                if (newY + parseFloat(shape.style.height) > window.innerHeight || newY < 0) {
+                    shape.velocityY *= -1; 
+                }
+
+                const interactionDistance = 100;
+                let dx = (newX + parseFloat(shape.style.width) / 2) - cursor.x;
+                let dy = (newY + parseFloat(shape.style.height) / 2) - cursor.y;
+                let distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance < interactionDistance) {
+                    const force = 100;
+                    const angle = Math.atan2(dy, dx);
+                    newX += Math.cos(angle) * force / distance;
+                    newY += Math.sin(angle) * force / distance;
+                }
+
+                shape.style.left = `${newX}px`;
+                shape.style.top = `${newY}px`;
+            });
+
+            requestAnimationFrame(animateShapes);
+        }
+
+        animateShapes();
+
+        const sendMessageButton = document.getElementById('sendMessageButton');
+        const messageInput = document.getElementById('messageInput');
+        const encryptionKey = document.getElementById('encryptionKey');
+        const technique = document.getElementById('technique');
+        const receivedMessages = document.getElementById('receivedMessages');
+
+        sendMessageButton.onclick = () => {
+            const message = messageInput.value;
+            const key = encryptionKey.value;
+            const selectedTechnique = technique.value;
+
+            const encryptedMessage = encryptMessage(message, key, selectedTechnique);
+            receivedMessages.value += `Encrypted Message: ${encryptedMessage}\nTechnique: ${selectedTechnique}, Key: ${key}\n\n`;
+            messageInput.value = '';
+        };
+
+        function encryptMessage(message, key, technique) {
+            return message; // Placeholder
+        }
+    </script>
+</body>
+</html>
